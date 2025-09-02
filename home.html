@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="images/vite.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FundMate - Student Fee Management System</title>
+    <meta name="description" content="Manage student fees efficiently with FundMate - a comprehensive fee tracking and collection system">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/remixicon.min.css">
+    <script src="js/chart.js"></script>
+    <script type="module" crossorigin="" src="js/index-CaQa6Q44.js"></script>
+    <link rel="stylesheet" crossorigin="" href="css/index-BtHSM5_G.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- Chart.js Integration Script -->
+    <script>
+      // Initialize pie chart when dashboard loads
+      let chartInstance = null;
+      
+      function updateSummaryChart(paid, unpaid) {
+        const canvas = document.getElementById('summaryChart');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        
+        // Destroy existing chart
+        if (chartInstance) {
+          chartInstance.destroy();
+        }
+        
+        // Create new chart
+        chartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Paid', 'Unpaid'],
+            datasets: [{
+              data: [paid, unpaid],
+              backgroundColor: [
+                '#10B981', // green-500
+                '#EF4444'  // red-500
+              ],
+              borderWidth: 0,
+              cutout: '60%'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
+      }
+      
+      // Observer to update chart when component mounts
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            const canvas = document.getElementById('summaryChart');
+            if (canvas && !chartInstance) {
+              // Initialize with default values
+              setTimeout(() => updateSummaryChart(0, 0), 100);
+            }
+          }
+        });
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      // Make function globally available
+      window.updateSummaryChart = updateSummaryChart;
+    </script>
+  
+
+</body></html>
