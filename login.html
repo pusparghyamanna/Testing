@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FundMate - Login &amp; Register</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent scroll */
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      width: 340px;
+      text-align: center;
+      animation: slideDown 0.6s ease;
+    }
+    h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #005fa3;
+    }
+    .google-btn {
+      background: #db4437;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .google-btn:hover {
+      background: #b5372a;
+    }
+    .links {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .links a {
+      color: #0077cc;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    hr {
+      margin: 15px 0;
+    }
+    .notify {
+      margin-top: 15px;
+      padding: 8px;
+      display: none;
+      border-radius: 6px;
+      animation: fadeIn 0.3s ease-in-out;
+      font-size: 14px;
+    }
+    .notify.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .notify.success {
+      background: #d4edda;
+      color: #155724;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden { display: none; }
+    .footer {
+      text-align: center;
+      max-width: 600px;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+      animation: fadeIn 1.2s ease;
+      margin-top: -40px; /* Move text up */
+    }
+    .loader {
+      display: none;
+      margin-top: 10px;
+    }
+    .loader div {
+      width: 8px;
+      height: 8px;
+      background: #0077cc;
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 0.6s infinite alternate;
+    }
+    .loader div:nth-child(2) { animation-delay: 0.2s; }
+    .loader div:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      to { transform: translateY(-8px); }
+    }
+  
+    .main-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .footer {
+      text-align: center;
+      max-width: 600px;
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+      animation: fadeIn 1.2s ease;
+    }
+    </style>
+</head>
+<body>
+<div class="main-area"><div class="container">
+<h2 id="formTitle">Login to FundMate</h2>
+<!-- Login Form -->
+<div id="loginForm">
+<input id="loginEmail" placeholder="Email" required="" type="email"/>
+<input id="loginPassword" placeholder="Password" required="" type="password"/>
+<button id="loginBtn">Login</button>
+<p class="links"><a id="forgotPassword">Forgot password?</a></p>
+<p class="links">Don't have an account? <a id="showRegister">Register</a></p>
+<hr/>
+<button class="google-btn" id="googleLogin">
+<svg fill="white" height="18" viewbox="0 0 488 512" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.6 166.2 64.8l-67.5 64.8C319.5 110.1 285.1 96 248 96c-84.2 0-152.6 68.4-152.6 152s68.4 152 152.6 152c74.8 0 137.2-51.8 149.6-121.8H248v-96h240z"></path>
+</svg>
+        Login with Google
+      </button>
+</div>
+<!-- Register Form -->
+<div class="hidden" id="registerForm">
+<input id="registerEmail" placeholder="Email" required="" type="email"/>
+<input id="registerPassword" placeholder="Password" required="" type="password"/>
+<button id="registerBtn">Register</button>
+<p class="links">Already have an account? <a id="showLogin">Login</a></p>
+</div>
+<div class="notify" id="notify"></div>
+<div class="loader" id="loader"><div></div><div></div><div></div></div>
+</div></div>
+<div class="footer">
+<strong>FundMate – Smart &amp; Simple Money Collection</strong><br/>
+    Collect, track, and manage funds for anything – from school fees to group gifts. FundMate makes it easy to calculate contributions, record payments, and keep everyone updated. No more messy spreadsheets or missed payments – just smooth, transparent money management for any group.<br/><br/>
+<em>Created by Pusparghya</em>
+</div>
+<script type="module">
+    // NOTE: Removed the import for './js/firebase-init.js' as it's not provided.
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+
+   const firebaseConfig = {
+  apiKey: "AIzaSyBBsxNIJOijdGmVUcsRt0zPNQq96YYgWAc",
+  authDomain: "fees-sheet-online.firebaseapp.com",
+  projectId: "fees-sheet-online",
+  storageBucket: "fees-sheet-online.firebasestorage.app",
+  messagingSenderId: "1018149181136",
+  appId: "1:1018149181136:web:9fa630cd808b96d31df0d5",
+  measurementId: "G-F29K3GV8YK"
+};
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    
+
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const showRegister = document.getElementById("showRegister");
+    const showLogin = document.getElementById("showLogin");
+    const formTitle = document.getElementById("formTitle");
+    const notifyBox = document.getElementById("notify");
+    const loader = document.getElementById("loader");
+
+    function toggleLoader(show) {
+      loader.style.display = show ? "block" : "none";
+    }
+
+    function showNotify(message, type) {
+      notifyBox.textContent = message;
+      notifyBox.className = `notify ${type}`;
+      notifyBox.style.display = "block";
+      setTimeout(() => notifyBox.style.display = "none", 3000);
+    }
+
+    showRegister.addEventListener("click", () => {
+      loginForm.classList.add("hidden");
+      registerForm.classList.remove("hidden");
+      formTitle.textContent = "Register for FundMate";
+    });
+    showLogin.addEventListener("click", () => {
+      registerForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+      formTitle.textContent = "Login to FundMate";
+    });
+
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      toggleLoader(true);
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          toggleLoader(false);
+          showNotify("Login successful!", "success");
+          // Correct redirection to home.html
+          setTimeout(() => window.location.href = "home.html", 1500);
+        })
+        .catch(error => {
+          toggleLoader(false);
+          if (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") showNotify("No account found with this email.", "error");
+          else if (error.code === "auth/wrong-password") showNotify("Incorrect password.", "error");
+          else showNotify("Error: " + error.message, "error");
+        });
+    });
+
+    document.getElementById("registerBtn").addEventListener("click", () => {
+      toggleLoader(true);
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          toggleLoader(false);
+          showNotify("Registration successful!", "success");
+          setTimeout(() => {
+            registerForm.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+            formTitle.textContent = "Login to FundMate";
+          }, 1500);
+        })
+        .catch(error => {
+          toggleLoader(false);
+          if (error.code === "auth/email-already-in-use") showNotify("Email is already registered.", "error");
+          else showNotify("Error: " + error.message, "error");
+        });
+    });
+
+    document.getElementById("googleLogin").addEventListener("click", () => {
+      toggleLoader(true);
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then(() => {
+          toggleLoader(false);
+          showNotify("Login successful!", "success");
+          // Correct redirection to home.html
+          setTimeout(() => window.location.href = "home.html", 1500);
+        })
+        .catch(error => {
+          toggleLoader(false);
+          showNotify("Error: " + error.message, "error");
+        });
+    });
+
+    document.getElementById("forgotPassword").addEventListener("click", () => {
+      const email = document.getElementById("loginEmail").value;
+      if (!email) return showNotify("Please enter your email first.", "error");
+      sendPasswordResetEmail(auth, email)
+        .then(() => showNotify("Password reset email sent!", "success"))
+        .catch(error => {
+          if (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") showNotify("No account found with this email.", "error");
+          else showNotify("Error: " + error.message, "error");
+        });
+    });
+  </script>
+</body>
+</html>
+
